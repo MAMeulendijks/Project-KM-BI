@@ -3,7 +3,7 @@ import numpy as np
 
 ## ======= Plot hemodynamic signals of interest - NO breathing
 
-def plot_overview(model, cycle_times, n_beats, breath_cycle_time, CO_list):
+def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list, pulmonary_CO_list):
     """
     Function to plot all signals of interest: 
         volumes: RA, LA, RV, LV
@@ -204,11 +204,17 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, CO_list):
     ax11.set_ylabel('Heart rate [bpm]')
     ax11.set_title('Heart rate over time', fontweight='bold')
     
-    # Cardiac output bar plot
-    ax12.bar(range(1, n_beats+1), CO_list,  color=color5)
+    # Cardiac output bar plot aorta
+    ax12.bar(range(1, n_beats+1), aortic_CO_list,  color=color5)
     ax12.set_xlabel('Beat Number')
     ax12.set_ylabel('Cardiac Output (L/min)')
-    ax12.set_title('Cardiac Output for the first 5 beats', fontweight='bold') 
+    ax12.set_title('Cardiac Output for the first 5 beats - aorta', fontweight='bold') 
+    
+    # Cardiac output bar plot pulmonary artery
+    ax12.bar(range(1, n_beats+1), pulmonary_CO_list,  color=color5)
+    ax12.set_xlabel('Beat Number')
+    ax12.set_ylabel('Cardiac Output (L/min)')
+    ax12.set_title('Cardiac Output for the first 5 beats - pulmonary artery', fontweight='bold') 
     
     # Adjust layout for better spacing
     plt.tight_layout()
@@ -224,4 +230,3 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, CO_list):
     
     # Show the figure
     plt.show()
-
