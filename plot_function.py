@@ -211,16 +211,15 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     ax12.set_title('Cardiac Output for the first 5 beats - aorta', fontweight='bold') 
     
     # Cardiac output bar plot pulmonary artery
-    ax12.bar(range(1, n_beats+1), pulmonary_CO_list,  color=color5)
-    ax12.set_xlabel('Beat Number')
-    ax12.set_ylabel('Cardiac Output (L/min)')
-    ax12.set_title('Cardiac Output for the first 5 beats - pulmonary artery', fontweight='bold') 
+    ax13.bar(range(1, n_beats+1), pulmonary_CO_list,  color=color5)
+    ax13.set_xlabel('Beat Number')
+    ax13.set_ylabel('Cardiac Output (L/min)')
+    ax13.set_title('Cardiac Output for the first 5 beats - pulmonary artery', fontweight='bold') 
     
     # Adjust layout for better spacing
     plt.tight_layout()
     
-    # Delete empty subplots
-    fig.delaxes(ax13)
+    
     fig.delaxes(ax14)
     fig.delaxes(ax15)
     fig.delaxes(ax16)
