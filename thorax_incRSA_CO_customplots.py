@@ -51,14 +51,17 @@ model.run(2)
 #model.plot(plt.figure(1, clear=True))
 
 #%%  Calculate cardiac output - no breathing
+
 flow_aortic_valve = model['Valve']['q'][:,'LvSyArt'] 
+flow_pulmonary_valve = model['Valve']['q'][:,'RvPuArt'] 
 time_points = model['Solver']['t']
 list_cycle_times = cycle_times[1:]
 
-CO_no_breathing = calculate_cardiac_output(flow_aortic_valve, time_points, cycle_times, n_beats)
+aortic_CO_no_breathing = calculate_cardiac_output(flow_aortic_valve, time_points, cycle_times, n_beats)
+pulmonary_CO_no_breathing = calculate_cardiac_output(flow_pulmonary_valve, time_points, cycle_times, n_beats)
 
 # %% Plot hemodynamic signals of interest - NO breathing
-plot_overview(model, cycle_times, n_beats, breath_cycle_time, CO_no_breathing)
+plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_no_breathing, pulmonary_CO_no_breathing)
 
 # %% Parameterize thorax
 model['Thorax']['dt'] = 0
@@ -70,15 +73,18 @@ model.run(2)
 
 #%%  Calculate cardiac output - breathing
 flow_aortic_valve = model['Valve']['q'][:,'LvSyArt'] 
+flow_pulmonary_valve = model['Valve']['q'][:,'RvPuArt'] 
 time_points = model['Solver']['t']
 list_cycle_times = cycle_times[1:]
 
-CO_breathing = calculate_cardiac_output(flow_aortic_valve, time_points, cycle_times, n_beats)
+aortic_CO_breathing = calculate_cardiac_output(flow_aortic_valve, time_points, cycle_times, n_beats)
+pulmonary_CO_breathing = calculate_cardiac_output(flow_pulmonary_valve, time_points, cycle_times, n_beats)
+
 
 # %% Plot hemodynamic signals of interest - breathing
-plot_overview(model, cycle_times, n_beats, breath_cycle_time, CO_breathing)
+plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_breathing, pulmonary_CO_breathing)
 
-#%% compare CO's
+#%% compare aortic CO's
 
 # Define bar width and positions for the side-by-side comparison
 bar_width = 0.35
@@ -88,13 +94,45 @@ index = np.arange(n_beats)
 plt.figure(3, figsize=(10, 6))
 
 # Plot the two sets of data with custom colors
-plt.bar(index, CO_no_breathing, bar_width, label='No Breathing', color='#1a2c5c')
-plt.bar(index + bar_width, CO_breathing, bar_width, label='Breathing', color='#c43c70')
+plt.bar(index, aortic_CO_no_breathing, bar_width, label='No Breathing', color='#1a2c5c')
+plt.bar(index + bar_width, aortic_CO_breathing, bar_width, label='Breathing', color='#c43c70')
 
 # Add labels, title, and legend
 plt.xlabel('Beat Number', fontsize=12)
 plt.ylabel('Cardiac Output (L/min)', fontsize=12)
-plt.title('Comparison of Cardiac Output for Each Beat', fontsize=14, fontweight='bold')
+plt.title('Comparison of aortic Cardiac Output for Each Beat', fontsize=14, fontweight='bold')
+
+# Set x-ticks and y-axis limit
+plt.xticks(index + bar_width / 2, range(1, n_beats+1))
+plt.ylim(0, 7)  # Set y-axis maximum to 7
+
+# Add a grid for better readability
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+
+# Add legend
+plt.legend()
+
+# Show the plot with a tight layout
+plt.tight_layout()
+plt.show()
+
+#%% compare pulmonary CO's
+
+# Define bar width and positions for the side-by-side comparison
+bar_width = 0.35
+index = np.arange(n_beats)
+
+# Create the figure
+plt.figure(4, figsize=(10, 6))
+
+# Plot the two sets of data with custom colors
+plt.bar(index, pulmonary_CO_no_breathing, bar_width, label='No Breathing', color='#1a2c5c')
+plt.bar(index + bar_width, pulmonary_CO_breathing, bar_width, label='Breathing', color='#c43c70')
+
+# Add labels, title, and legend
+plt.xlabel('Beat Number', fontsize=12)
+plt.ylabel('Cardiac Output (L/min)', fontsize=12)
+plt.title('Comparison of pulmonary Cardiac Output for Each Beat', fontsize=14, fontweight='bold')
 
 # Set x-ticks and y-axis limit
 plt.xticks(index + bar_width / 2, range(1, n_beats+1))
