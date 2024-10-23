@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-## ======= Plot hemodynamic signals of interest - NO breathing
+## ======= Plot hemodynamic signals of interest
 
 def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list, pulmonary_CO_list):
     """
@@ -9,7 +9,7 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
         volumes: RA, LA, RV, LV
         pressures: RA, LA, RV, LV, Aorta, Pulm. Artery
         pressure-volume loop: LV
-        transmural pressure: RA,LA,RV,LV minus the thorax pressure
+        transmural pressure: RA, LA, RV, LV minus the thorax pressure
         total stress: RA, LA, RV, LV
         thorax pressure
         heart rate function
@@ -22,7 +22,7 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     CO_list (list): List of cardiac output values for each beat.
 
     Returns:
-    One figure with x subplots of the signals of interest .
+    One figure with 13 subplots of the signals of interest .
     """
     
     # Define colors
@@ -34,7 +34,30 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     color6 = 'orange'  # Indian red
     
     # Create a figure with a 4x2 grid layout to accommodate the new plot
-    fig, ((ax1, ax2, ax9, ax10), (ax3, ax4, ax11, ax12), (ax5, ax6, ax13, ax14), (ax7, ax8, ax15, ax16)) = plt.subplots(4, 4, figsize=(10, 10))  # Adjust figsize as needed
+    # fig, ((ax1, ax2, ax9, ax10), (ax3, ax4, ax11, ax12), (ax5, ax6, ax13, ax14), (ax7, ax8, ax15, ax16)) = plt.subplots(4, 4, figsize=(10, 10))  # Adjust figsize as needed
+    
+    fig = plt.figure(figsize=(10, 10))
+    gs = fig.add_gridspec(4, 4)
+    
+    # Create subplots in the 4x4 grid
+    ax1 = fig.add_subplot(gs[0, 0])  # Top-left
+    ax2 = fig.add_subplot(gs[0, 1])  # Top
+    ax9 = fig.add_subplot(gs[0, 2])  # Top
+    ax10 = fig.add_subplot(gs[0, 3])  # Top-right
+    
+    ax3 = fig.add_subplot(gs[1, 0])  # 2nd row
+    ax4 = fig.add_subplot(gs[1, 1])
+    ax11 = fig.add_subplot(gs[1, 2])
+    ax12 = fig.add_subplot(gs[1, 3])
+    
+    ax5 = fig.add_subplot(gs[2, 0])  # 3rd row
+    ax6 = fig.add_subplot(gs[2, 1])
+    
+    ax7 = fig.add_subplot(gs[3, 0])  # 4th row
+    ax8 = fig.add_subplot(gs[3, 1])
+    
+    # Use the 2x2 space on the lower right (axes 13-16)
+    ax_larger = fig.add_subplot(gs[2:, 2:])  # Merge bottom-right 2x2
     
     # Right Heart Volume Plot: Right Atrium and Right Ventricle
     ax1.plot(model['Solver']['t'] * 1e3, 
@@ -181,14 +204,6 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     ax9.set_ylabel('Pressure [mmHg]')
     ax9.set_title('Thorax Pressure', fontweight='bold')
     
-    # Left Ventricle Pressure-Volume Loop
-    V_lv = model['Cavity']['V'][:, 'cLv']*1e6
-    
-    ax10.plot(V_lv, p_lv, label='Left Ventricle', color = color5)
-    ax10.set_xlabel('Volume [ml]')
-    ax10.set_ylabel('Pressure [mmHg]')
-    ax10.set_title('LV Pressure-Volume Loop', fontweight='bold')
-    
     # Plot the BPM values against the calculated time points
     amount = model['Solver']['store_beats']
     bpm_values = [60 / cycle_time for cycle_time in cycle_times[1:]] 
@@ -200,7 +215,7 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     
     ax11.step(time_points, bpm_values_repeated, where='post', color='blue', linewidth=1.5)
     ax11.grid(True)
-    ax11.set_xlabel('Time [ms])')
+    ax11.set_xlabel('Time [ms]')
     ax11.set_ylabel('Heart rate [bpm]')
     ax11.set_title('Heart rate over time', fontweight='bold')
     
@@ -211,18 +226,26 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     ax12.set_title('Cardiac Output for the first 5 beats - aorta', fontweight='bold') 
     
     # Cardiac output bar plot pulmonary artery
-    ax13.bar(range(1, n_beats+1), pulmonary_CO_list,  color=color5)
-    ax13.set_xlabel('Beat Number')
-    ax13.set_ylabel('Cardiac Output (L/min)')
-    ax13.set_title('Cardiac Output for the first 5 beats - pulmonary artery', fontweight='bold') 
+    ax10.bar(range(1, n_beats+1), pulmonary_CO_list,  color=color2)
+    ax10.set_xlabel('Beat Number')
+    ax10.set_ylabel('Cardiac Output (L/min)')
+    ax10.set_title('Cardiac Output for the first 5 beats - pulmonary artery', fontweight='bold') 
+    
+    # Left Ventricle Pressure-Volume Loop
+    V_lv = model['Cavity']['V'][:, 'cLv']*1e6
+    
+    ax_larger.plot(V_lv, p_lv, label='Left Ventricle', color = color5)
+    ax_larger.set_xlabel('Volume [ml]')
+    ax_larger.set_ylabel('Pressure [mmHg]')
+    ax_larger.set_title('LV Pressure-Volume Loop', fontweight='bold')
     
     # Adjust layout for better spacing
     plt.tight_layout()
     
     
-    fig.delaxes(ax14)
-    fig.delaxes(ax15)
-    fig.delaxes(ax16)
+    # fig.delaxes(ax14)
+    # fig.delaxes(ax15)
+    # fig.delaxes(ax16)
     
     manager = plt.get_current_fig_manager()
     manager.window.setGeometry(500, 100, 900, 900)
