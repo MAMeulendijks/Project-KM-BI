@@ -11,7 +11,7 @@ plt.close('all')
 # %% load model including the thorax
 model = VanOsta2024_Breathing_Thorax()
 
-include_hrv = 'off'    # on, off, or inversed
+include_hrv = 'on'    # on, off, or inversed
 
 # %% Set mechanical triggers to start from the RA (reflecting sinus rhythm)
 
