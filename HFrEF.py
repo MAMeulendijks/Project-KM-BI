@@ -84,8 +84,8 @@ sfact_sv = model_hf['Patch']['Sf_act']['pSv0']
 
 # reduce the value for sfact (linear active stress component) to 60% of its inital value --> wat wordt er gereduceerd? wat houdt linear active stress component in?
 # Als ik het goed begrijp wordt Emax gereduceerd met 50%? Emax = p_ee/ (V_ee - V_0) --> V_0 = 0 kiezen we want we hebben niet meerdere loops?
-model_hf['Patch']['Sf_act']['pLv0'] = 0.5*sfact_lv
-model_hf['Patch']['Sf_act']['pSv0'] = 0.5*sfact_sv
+model_hf['Patch']['Sf_act']['pLv0'] = 0.45*sfact_lv
+model_hf['Patch']['Sf_act']['pSv0'] = 0.45*sfact_sv
 
 
 print('The new sfact for the LV and SV equal ', model_hf['Patch']['Sf_act']['pLv0']*1e3, ' kPa and ', 1e3*model['Patch']['Sf_act']['pSv0'], ' kPa respectively.')
