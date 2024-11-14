@@ -84,8 +84,8 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
              model['Cavity']['V'][:, 'cLv'] * 1e6, 
              label="LV", color=color5)
     
-    ax2.set_ylim(0, 150)
-    ax2.set_yticks(np.arange(0, 151, 25))
+    ax2.set_ylim(0, 250)
+    ax2.set_yticks(np.arange(0,251, 50))
     ax2.set_xlabel('Time [ms]')
     ax2.set_ylabel('Volume [ml]')
     ax2.set_title('Left Heart', fontweight='bold')
@@ -182,7 +182,7 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     ax7.set_ylabel('Total stress [kPa]')
     ax7.legend(ncol=2, loc='upper right')
 
-    # Right Heart Stress Plot: Right Atrium, Right Ventricle
+    # Left Heart Stress Plot: Right Atrium, Right Ventricle
     ax8.plot(model['Solver']['t'] * 1e3, 
              model['Patch']['Sf'][:, 'pLa0']*1e-3, 
              label="LA", color=color4)
@@ -192,7 +192,7 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
              label="LV", color=color5)
     
     ax8.set_ylim(0, 100)
-    ax8.set_yticks(np.arange(0, 101, 25))
+    ax8.set_yticks(np.arange(0, 151, 25))
     ax8.set_xlabel('Time [ms]')
     ax8.set_ylabel('Total stress [kPa]')
     ax8.legend(ncol=2, loc='upper right')
@@ -223,13 +223,13 @@ def plot_overview(model, cycle_times, n_beats, breath_cycle_time, aortic_CO_list
     ax12.bar(range(1, n_beats+1), aortic_CO_list,  color=color5)
     ax12.set_xlabel('Beat Number')
     ax12.set_ylabel('Cardiac Output (L/min)')
-    ax12.set_title('Cardiac Output for the first 5 beats - aorta', fontweight='bold') 
+    ax12.set_title('CO - aorta', fontweight='bold') 
     
     # Cardiac output bar plot pulmonary artery
     ax10.bar(range(1, n_beats+1), pulmonary_CO_list,  color=color2)
     ax10.set_xlabel('Beat Number')
     ax10.set_ylabel('Cardiac Output (L/min)')
-    ax10.set_title('Cardiac Output for the first 5 beats - pulmonary artery', fontweight='bold') 
+    ax10.set_title('CO - pulmonary', fontweight='bold') 
     
     # Left Ventricle Pressure-Volume Loop
     V_lv = model['Cavity']['V'][:, 'cLv']*1e6
